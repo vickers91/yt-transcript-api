@@ -4,9 +4,11 @@ import json
 
 def handler(event, context):
     try:
+        # Obter os parâmetros da URL
         query = event.get("queryStringParameters", {})
         video_url = query.get("url", "")
 
+        # Extrair o ID do vídeo
         parsed_url = urlparse(video_url)
         video_id = parse_qs(parsed_url.query).get("v")
 
@@ -17,6 +19,8 @@ def handler(event, context):
             }
 
         video_id = video_id[0]
+
+        # Obter a transcrição
         transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=["pt", "en"])
         full_text = "\n".join([entry["text"] for entry in transcript])
 
